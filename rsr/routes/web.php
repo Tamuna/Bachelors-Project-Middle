@@ -21,4 +21,4 @@ Route::get('/home', 'HomeController@index')->name('home');
 Route::post('/login', 'Auth\LoginController@login');
 
 
-Route::get('/questions/{numQuestions}', 'Question\QuestionController@getSeveralQuestions');
+Route::get('api/questions/{numQuestions}', 'Question\QuestionController@getSeveralQuestions');
