@@ -45,6 +45,7 @@ class GameController extends Controller
         $result =
             [
                 "status" => "200",
+                "error" => [],
                 "result" =>
                     [
                         "currentNumberOfCorrectAnswers" => $points
