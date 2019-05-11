@@ -14,7 +14,17 @@ class QuestionController extends Controller
         echo "index";
     }
 
-
+    /*
+     * Params:
+     *  userId: userId
+     *  $numberOfQuestions (optional = 1): Number of questions to return.
+     *
+     * Gets requested number of random questions from questions table.
+     * Saves questions in answered_questions table to avoid duplicate questions for users
+     *
+     * Returns:
+     *  Requested number of questions
+     */
     public function getRandomQuestion($userId, $numberOfQuestions = 1)
     {
         $alreadyAnsweredQuestions = DB::table('answered_questions')->where("user_id", $userId)->pluck('question_id');
@@ -29,6 +39,7 @@ class QuestionController extends Controller
         $result =
             [
                 "status" => "200",
+                "error" => [],
                 "result" =>
                     [
                         $questions
