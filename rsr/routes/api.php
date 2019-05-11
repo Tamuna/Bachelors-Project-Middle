@@ -17,5 +17,5 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-
-//Route::get('/questions', 'QuestionController@getSeveralQuestions');
+Route::get("/individual/getRandomQuestion/{userId}/{numberOfQuestions?}", "QuestionController@getRandomQuestion");
+Route::get("/individual/finishGame/{userId}/{numberOfCorrectAnswers}", "GameController@finishGame");
