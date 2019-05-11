@@ -22,3 +22,5 @@ Route::post('/login', 'Auth\LoginController@login');
 
 
 Route::get('api/questions/{numQuestions}', 'Question\QuestionController@getSeveralQuestions');
+
+Route::get('api/individual/answer/{questionId}/{currentAnswer}', 'Question\QuestionController@checkAnswer');
