@@ -139,23 +139,13 @@ CREATE TABLE room_answers (
 );
 
 
-CREATE TABLE question_levels (
-    id INT NOT NULL AUTO_INCREMENT,
-    question_level VARCHAR(50),
-    PRIMARY KEY (id)
-);
-
 CREATE TABLE questions (
     id INT NOT NULL AUTO_INCREMENT,
     user_id INT NOT NULL,
     question_content VARCHAR(4000),
-    question_level_id INT NOT NULL,
-    is_public BOOLEAN NOT NULL,
     PRIMARY KEY (id),
     FOREIGN KEY (user_id)
-        REFERENCES users (id),
-    FOREIGN KEY (question_level_id)
-        REFERENCES question_levels (id)
+        REFERENCES users (id)
 );
 
 CREATE TABLE answers (
@@ -228,16 +218,4 @@ CREATE TABLE tournament_users (
         REFERENCES tournaments (id)
 );
 
-INSERT INTO `rsr`.`users` (`name`, `email`, `username`, `password`) VALUES ('tamuna', 'tgeld15@freeuni.edu.ge', 'tgeld15', '12345678');
-INSERT INTO `rsr`.`users` (`name`, `email`, `username`, `password`) VALUES ('levan','lkara15@freeuni.edu.ge','lkara15', '12345678');
-
-INSERT INTO `rsr`.`friendships` (`user_one_id`, `user_two_id`) VALUES ('1', '2');
-INSERT INTO `rsr`.`friendships` (`user_one_id`, `user_two_id`) VALUES ('2', '1');
-
-INSERT INTO `rsr`.`question_levels` (`question_level`) VALUES ('easy');
-INSERT INTO `rsr`.`question_levels` (`question_level`) VALUES ('medium');
-INSERT INTO `rsr`.`question_levels` (`question_level`) VALUES ('hard');
-
-INSERT INTO `rsr`.`questions` (`user_id`, `question_content`, `question_level_id`, `is_public`) VALUES ('1', 'tamunas question', '1', '1');
-INSERT INTO `rsr`.`questions` (`user_id`, `question_content`, `question_level_id`, `is_public`) VALUES ('2', 'levanis question', '2', '1');
-
+select * from users

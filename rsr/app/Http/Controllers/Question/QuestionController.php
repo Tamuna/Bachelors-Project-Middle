@@ -5,15 +5,33 @@ namespace App\Http\Controllers\Question;
 
 
 use App\Answer;
-use App\Question;
-use function MongoDB\BSON\toJSON;
-use function Sodium\add;
+use DB;
 
 class QuestionController
 {
-    public function getSeveralQuestions($numQuestions)
+
+    /*
+     * Params:
+     *  userId: userId
+     *  $numberOfQuestions (optional = 1): Number of questions to return.
+     *
+     * Gets requested number of random questions from questions table.
+     * Saves questions in answered_questions table to avoid duplicate questions for users
+     *
+     * Returns:
+     *  Requested number of questions
+     */
+    public function getRandomQuestion($userId, $numberOfQuestions = 1)
     {
-        return Question::inRandomOrder()->get()->take($numQuestions);
+        $alreadyAnsweredQuestions = DB::table('answered_questions')->where("user_id", $userId)->pluck('question_id');
+        $questions = DB::table('questions')->inRandomOrder()->whereNotIn('id', $alreadyAnsweredQuestions)->get()->take($numberOfQuestions);
+        $questionIds = $questions->pluck('id');
+        foreach ($questionIds as $questionId) {
+            DB::table('answered_questions')->insert(
+                ['user_id' => $userId, "question_id" => $questionId]
+            );
+        }
+        return $questions;
     }
 
     private function stringsMatch($s1, $s2)

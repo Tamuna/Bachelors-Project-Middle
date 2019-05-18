@@ -20,7 +20,7 @@ Auth::routes();
 Route::get('/home', 'HomeController@index')->name('home');
 Route::post('/login', 'Auth\LoginController@login');
 
-
-Route::get('api/questions/{numQuestions}', 'Question\QuestionController@getSeveralQuestions');
-
+//individual game api
 Route::get('api/individual/answer/{questionId}/{currentAnswer}', 'Question\QuestionController@checkAnswer');
+Route::get("api/individual/getRandomQuestion/{userId}/{numberOfQuestions?}", "Question\QuestionController@getRandomQuestion");
+Route::get("api/individual/finishGame/{userId}/{numberOfCorrectAnswers}", "Game\GameController@finishGame");
