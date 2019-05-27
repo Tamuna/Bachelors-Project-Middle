@@ -218,4 +218,4 @@ CREATE TABLE tournament_users (
         REFERENCES tournaments (id)
 );
 
-select * from users
+
