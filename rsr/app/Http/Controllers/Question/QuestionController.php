@@ -31,7 +31,15 @@ class QuestionController
                 ['user_id' => $userId, "question_id" => $questionId]
             );
         }
-        return $questions;
+        $result =
+            [
+                "error" => "",
+                "result" => [
+                    "questions" => $questions
+                ],
+
+            ];
+        return response()->json($result, 200);
     }
 
     private function stringsMatch($s1, $s2)

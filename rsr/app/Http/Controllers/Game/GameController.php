@@ -41,10 +41,11 @@ class GameController
         );
         $result =
             [
-                "status" => "200",
                 "error" => "",
-                "currentNumberOfCorrectAnswers" => $points
+                "result" => [
+                    "current-number-of-correct-answers" => $points
+                ]
             ];
-        return response()->json($result);
+        return response()->json($result, 200);
     }
 }

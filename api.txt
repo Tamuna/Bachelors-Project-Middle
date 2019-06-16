@@ -1,0 +1,73 @@
+API
+
+ქვემოთ ჩამოთვლილ ყველა სერვისს, უნდა გავაყოლოთ შემდეგი header-ები:
+Content-Type: application/json
+X-Requested-With: XMLHttpRequest
+
+
+(auth)
+1. User Registration
+request type:
+	post
+route:
+	api/auth/register
+body params:
+	user_name
+	email
+	password
+	c_password
+
+
+(auth)
+2. Login
+request type:
+	post
+route:
+	api/auth/login
+body params:
+	user_name
+	password
+
+
+ქვემოთ ჩამოთვლილი ყველა სერვისი საჭირეოებს ავტორიზებულ მომხმარებელს.
+default-ებთან ერთად უნდა დავამატოთ შემდეგი header:
+Authorization
+Authorization-ის შესაბამის მნიშვნებლობას აქვს შემდეგიე ფორმატი: "Bearer [ავტორიზაციის შემდეგ მიღებეული token]"
+მაგალითი: Authorization: "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6IjcyZjAwNTEwZTQxY"
+
+
+(auth)
+3. Logout
+request type:
+	get
+route:
+	api/auth/logout
+
+
+(auth)
+4. User
+request type:
+	get
+route:
+	/api/auth/user
+
+
+
+
+
+(profile)
+5. add friend
+request type:
+	post
+route:
+	api/profile/get-friends-list
+body params:
+	frind_user_name (user_name ვისი დამატებაც გვინდა)
+
+
+(profile)
+6. get list of friends
+request type:
+	post
+route:
+	api/profile/get-friends-list

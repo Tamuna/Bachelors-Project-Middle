@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Support\Facades\Auth;
 
@@ -44,11 +43,11 @@ class LoginController extends Controller
         return 'username';
     }
 
-    public function login(Request $request)
+    public function login(array $data)
     {
         $user_data = array(
-            'email' => $request->get('email'),
-            'password' => $request->get('password')
+            'user_name' => $data->get('username'),
+            'password' => $data->get('password')
         );
         if (Auth::attempt($user_data)) {
             return "1";
