@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Game;
 
 use DB;
+use Illuminate\Http\Request;
 
 class GameController
 {
@@ -23,8 +24,11 @@ class GameController
      * Returns:
      *  Updated number of correct answers.
      */
-    public function finishGame($userId, $numberOfCorrectAnswers)
+    public function finishGame(Request $request)
     {
+        $user = $request->user();
+        $userId = $user->id;
+        $numberOfCorrectAnswers = $request->all()['number_of_correct_answers'];
         $points = 0;
         $firstPlay = DB::table('points')->where("user_id", $userId)->get();
         if (!$firstPlay->isEmpty()) {

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Auth;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Validator;
 use App\User;
 
@@ -20,7 +21,8 @@ class PassportController extends Controller
             'user_name' => 'required|unique:users',
             'email' => 'required|email|unique:users',
             'password' => 'required',
-            'c_password' => 'required|same:password'
+            'c_password' => 'required|same:password',
+            'chat_user_id' => 'unique:users'
         ]);
         if ($validator->fails()) {
             $result =
@@ -33,6 +35,13 @@ class PassportController extends Controller
         $input = $request->all();
         $input['password'] = bcrypt($input['password']);
         $user = User::create($input);
+//        return $input;
+//        $user = User::create([
+//            'user_name' => $input['user_name'],
+//            'email' => $input['email'],
+//            'password' => $input['password'],
+//            'chat_user_id' => $input['chat_user_id']
+//        ]);
         $success['token'] = $user->createToken('My App')->accessToken;
         $success['name'] = $user->name;
         $result =

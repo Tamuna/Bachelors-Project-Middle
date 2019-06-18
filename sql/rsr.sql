@@ -167,6 +167,11 @@ CREATE TABLE `password_resets` (
 CREATE TABLE `users` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `user_name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `first_name` varchar(255) COLLATE utf8mb4_unicode_ci,
+  `last_name` varchar(255) COLLATE utf8mb4_unicode_ci,
+  `birth_date` Date,
+  `profile_picture` BLOB,
+  `chat_user_id` int NOT NULL,
   `email` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `email_verified_at` timestamp NULL DEFAULT NULL,
   `password` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,

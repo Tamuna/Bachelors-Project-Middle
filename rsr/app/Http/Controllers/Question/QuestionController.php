@@ -6,6 +6,7 @@ namespace App\Http\Controllers\Question;
 
 use App\Answer;
 use DB;
+use Illuminate\Http\Request;
 
 class QuestionController
 {
@@ -21,8 +22,10 @@ class QuestionController
      * Returns:
      *  Requested number of questions
      */
-    public function getRandomQuestion($userId, $numberOfQuestions = 1)
+    public function getRandomQuestion(Request $request, $numberOfQuestions = 1)
     {
+        return $request;
+        $userId = $request->user()->id;
         $alreadyAnsweredQuestions = DB::table('answered_questions')->where("user_id", $userId)->pluck('question_id');
         $questions = DB::table('questions')->inRandomOrder()->whereNotIn('id', $alreadyAnsweredQuestions)->get()->take($numberOfQuestions);
         $questionIds = $questions->pluck('id');

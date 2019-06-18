@@ -28,18 +28,21 @@ Route::group([
     Route::group([
         'middleware' => 'auth:api'
     ], function() {
-        Route::get('logout', 'Auth\PassportController@logout');
+        Route::post('logout', 'Auth\PassportController@logout');
         Route::get('user', 'Auth\PassportController@user');
     });
 });
 
 
-// Profile
 Route::group([
     'middleware' => 'auth:api'
 ], function() {
+    // Profile
     Route::post('profile/add-friend', 'Profile\ProfileController@addFriend');
-    Route::post('profile/get-friends-list', 'Profile\ProfileController@getFriendsList');
+    Route::get('profile/get-friends-list', 'Profile\ProfileController@getFriendsList');
 
+    // Individual game
+    Route::get('individual/answer/check-answer/{questionId}/{currentAnswer}', 'Question\QuestionController@checkAnswer');
+    Route::get("individual/get-random-question/{numberOfQuestions?}", "Question\QuestionController@getRandomQuestion");
+    Route::post("individual/finish-game", 'Game\GameController@finishGame');
 });
-
