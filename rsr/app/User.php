@@ -6,9 +6,20 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Laravel\Passport\HasApiTokens;
-class User extends Authenticatable
+use Notification;
+class User extends Authenticatable implements  MustVerifyEmail
 {
     use HasApiTokens, Notifiable;
+
+    /**
+     * Send the email verification notification.
+     *
+     * @return void
+     */
+    public function sendEmailVerificationNotification()
+    {
+        $this->notify(new VerifyEmail); // my notification
+    }
 
     /**
      * The attributes that are mass assignable.
@@ -16,7 +27,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'user_name', 'email', 'password', 'chat_user_id'
+        'user_name', 'email', 'password', 'chat_user_id', 'device_token'
     ];
 
     /**

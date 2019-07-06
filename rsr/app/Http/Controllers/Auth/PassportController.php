@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Auth;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
 use Validator;
 use App\User;
 
@@ -21,36 +20,31 @@ class PassportController extends Controller
             'user_name' => 'required|unique:users',
             'email' => 'required|email|unique:users',
             'password' => 'required',
-            'c_password' => 'required|same:password',
-            'chat_user_id' => 'unique:users'
+            'c_password' => 'required|same:password'
         ]);
         if ($validator->fails()) {
             $result =
                 [
-                    "error" => $validator->errors(),
-                    "result" => [],
+                    "error" => $validator->errors()->first(),
+                    "result" => null,
                 ];
-            return response()->json($result, 401);
+            return response()->json($result, 200);
         }
         $input = $request->all();
+        if (strlen($input['password']) < 8) {
+            $result = [
+                "error" => "password short",
+                "result" => null,
+            ];
+            return response()->json($result, 200);
+        }
         $input['password'] = bcrypt($input['password']);
         $user = User::create($input);
-//        return $input;
-//        $user = User::create([
-//            'user_name' => $input['user_name'],
-//            'email' => $input['email'],
-//            'password' => $input['password'],
-//            'chat_user_id' => $input['chat_user_id']
-//        ]);
         $success['token'] = $user->createToken('My App')->accessToken;
-        $success['name'] = $user->name;
         $result =
             [
-                "error" => "",
-                "result" => [
-                    "success" => $success
-                ],
-
+                "error" => null,
+                "result" => ['token' => $success['token']]
             ];
         return response()->json($result, 200);
     }
@@ -65,16 +59,15 @@ class PassportController extends Controller
             $success['token'] = $user->createToken('My App')->accessToken;
             $result =
                 [
-                    "error" => "",
-                    "result" => [
-                        "success" => $success
-                    ],
-
+                    "error" => null,
+                    'result' => ["token" => $success['token']]
                 ];
             return response()->json($result, 200);
         }
-        return response()->json(['error' => 'Unauthorized'], 401);
+        return response()->json(['error' => 'Unauthorized'
+            , 'result' => null], 200);
     }
+
     public function getAuthenticatedUser()
     {
         $user = Auth::user();
@@ -92,13 +85,10 @@ class PassportController extends Controller
         $request->user()->token()->revoke();
         $result =
             [
-                "error" => "",
-                "result" => [
-                    "success" => "1"
-                ],
-
+                "error" => null,
+                "result" => "success"
             ];
-        return response()->json($result , 200);
+        return response()->json($result, 200);
     }
 
     /**
@@ -110,13 +100,37 @@ class PassportController extends Controller
     {
         $result =
             [
-                "error" => "",
+                "error" => null,
                 "result" => [
                     "user" => $request->user()
                 ],
 
             ];
 
+        return response()->json($result, 200);
+    }
+
+    public function setChatId(Request $request)
+    {
+        $chatId = $request->all()['chat_id'];
+        $device_token = $request->all()['device_token'];
+        $user = $request->user();
+        if ($chatId != null) {
+            $user->chat_user_id = $chatId;
+        }
+        if ($device_token != null) {
+            $user->device_token = $device_token;
+        }
+        $user->save();
+
+        $result =
+            [
+                "error" => null,
+                "result" => [
+                    "user" => $user
+                ],
+
+            ];
         return response()->json($result, 200);
     }
 }

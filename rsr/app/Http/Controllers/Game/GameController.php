@@ -24,11 +24,11 @@ class GameController
      * Returns:
      *  Updated number of correct answers.
      */
-    public function finishGame(Request $request)
+    public function finishGame(Request $request, $numberOfCorrect)
     {
         $user = $request->user();
         $userId = $user->id;
-        $numberOfCorrectAnswers = $request->all()['number_of_correct_answers'];
+        $numberOfCorrectAnswers = $numberOfCorrect;
         $points = 0;
         $firstPlay = DB::table('points')->where("user_id", $userId)->get();
         if (!$firstPlay->isEmpty()) {
@@ -45,7 +45,7 @@ class GameController
         );
         $result =
             [
-                "error" => "",
+                "error" => null,
                 "result" => [
                     "current-number-of-correct-answers" => $points
                 ]

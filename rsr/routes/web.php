@@ -17,8 +17,3 @@ Route::get('/', function () {
 
 Auth::routes();
 
-
-// individual game api
-Route::get('api/individual/answer/{questionId}/{currentAnswer}', 'Question\QuestionController@checkAnswer');
-Route::get("api/individual/getRandomQuestion/{userId}/{number-of-questions?}", "Question\QuestionController@getRandomQuestion");
-Route::get("api/individual/finishGame/{userId}/{number-of-correct-answers}", "Game\GameController@finishGame");

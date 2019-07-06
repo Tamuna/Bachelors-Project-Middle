@@ -1,0 +1,36 @@
+<?php
+
+
+namespace App\Http\Controllers\Tour;
+
+
+use App\Http\Controllers\Controller;
+use DB;
+use Illuminate\Http\Request;
+
+class TourController extends Controller
+{
+    /**
+     * @param Request $request : containing params in body
+     * @return array: error_code and id of last added tournament
+     */
+    public function saveTour(Request $request)
+    {
+        $tourName = $request->all()["name"];
+        $userid = $request->all()["user_id"];
+        $startTime = $request->all()["start_time"];
+
+        $id = DB::table('tournaments')->insertGetId([
+            [
+                'tournament_name' => $tourName,
+                'user_id' => $userid,
+                'start-time' => $startTime
+            ]
+        ]);
+        $result = [
+            'error' => null,
+            'result' => $id
+        ];
+        return $result;
+    }
+}

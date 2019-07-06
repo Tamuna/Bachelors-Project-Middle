@@ -27,22 +27,36 @@ Route::group([
 
     Route::group([
         'middleware' => 'auth:api'
-    ], function() {
+    ], function () {
         Route::post('logout', 'Auth\PassportController@logout');
         Route::get('user', 'Auth\PassportController@user');
+        Route::post('register-chat-id', 'Auth\PassportController@setChatId');
+
+        Route::post('verify-email', 'Auth\VerificationController@verify');
+
     });
 });
 
 
 Route::group([
     'middleware' => 'auth:api'
-], function() {
+], function () {
     // Profile
     Route::post('profile/add-friend', 'Profile\ProfileController@addFriend');
     Route::get('profile/get-friends-list', 'Profile\ProfileController@getFriendsList');
+    Route::post('profile/change-first-name', 'Profile\ProfileController@changeFirstName');
+    Route::post('profile/change-last-name', 'Profile\ProfileController@changeLastName');
+    Route::post('profile/change-password', 'Profile\ProfileController@changePassword');
 
     // Individual game
-    Route::get('individual/answer/check-answer/{questionId}/{currentAnswer}', 'Question\QuestionController@checkAnswer');
+    Route::get('individual/check-answer/{questionId}/{currentAnswer}', 'Question\QuestionController@checkAnswer');
     Route::get("individual/get-random-question/{numberOfQuestions?}", "Question\QuestionController@getRandomQuestion");
-    Route::post("individual/finish-game", 'Game\GameController@finishGame');
+    Route::post("individual/finish-game/{numberOfCorrect}", 'Game\GameController@finishGame');
+
+    //Group chat 1
+    Route::post("group/send-notification", 'Profile\ProfileController@sendNotification');
+    Route::post("group/get-chat-occupants", 'Profile\ProfileController@getChatOccupants');
+
+    //Tours
+    Route::post("tour/save-tour", 'Tour\TourController@saveTour');
 });

@@ -24,7 +24,6 @@ class QuestionController
      */
     public function getRandomQuestion(Request $request, $numberOfQuestions = 1)
     {
-        return $request;
         $userId = $request->user()->id;
         $alreadyAnsweredQuestions = DB::table('answered_questions')->where("user_id", $userId)->pluck('question_id');
         $questions = DB::table('questions')->inRandomOrder()->whereNotIn('id', $alreadyAnsweredQuestions)->get()->take($numberOfQuestions);
@@ -36,7 +35,7 @@ class QuestionController
         }
         $result =
             [
-                "error" => "",
+                "error" => null,
                 "result" => [
                     "questions" => $questions
                 ],
@@ -47,11 +46,16 @@ class QuestionController
 
     private function stringsMatch($s1, $s2)
     {
-        if ($s1 == $s2) {
-            echo "equals";
-            return true;
+        $result = false;
+        $maxDif = strlen($s1) / 4;
+        try {
+            if (levenshtein(substr($s1,0,255), substr($s2,0,255)) <= $maxDif) {
+                $result = true;
+            }
+        } catch (Exception $e) {
+            $result = $s1 == $s2;
         }
-        return false;
+        return $result;
     }
 
     public function checkAnswer($questionId, $currentAnswer)
