@@ -7,6 +7,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Validator;
 use App\User;
+use App\Notifications\SignupActivate;
+use Redirect;
 
 class PassportController extends Controller
 {
@@ -33,20 +35,55 @@ class PassportController extends Controller
         $input = $request->all();
         if (strlen($input['password']) < 8) {
             $result = [
-                "error" => "password short",
+                "error" => "პაროლი უნდა შედგებოდეს მინიმუმ 8 სიმბოლოსგან",
                 "result" => null,
             ];
             return response()->json($result, 200);
         }
         $input['password'] = bcrypt($input['password']);
+        $input['activation_token'] = str_random(60);
         $user = User::create($input);
         $success['token'] = $user->createToken('My App')->accessToken;
+        $user->notify(new SignupActivate($user));
         $result =
             [
                 "error" => null,
                 "result" => ['token' => $success['token']]
             ];
         return response()->json($result, 200);
+    }
+
+    public function sendConfirmation(Request $request) {
+        $user = User::where('email', $request->all()['email']) -> first();
+        $user->notify(new SignupActivate($user));
+        $result =
+            [
+                "error" => null,
+                "result" => "success"
+            ];
+        return response()->json($result, 200);
+    }
+
+    public function signupActivate($token)
+    {
+        $user = User::where('activation_token', $token)->first();
+//        if (!$user) {
+//            return response()->json([
+//                'message' => 'This activation token is invalid.'
+//            ], 404);
+//        }
+        if ($user) {
+            $user->active = true;
+            $user->activation_token = '';
+            $user->save();
+        }
+        $url = "https://ra-sad-rodis.flycricket.io/privacy.html";
+        return Redirect::away($url);
+//        $result =
+//            [
+//                "result" => "success"
+//            ];
+//        return response();
     }
 
     /*
@@ -56,6 +93,24 @@ class PassportController extends Controller
     {
         if (Auth::attempt(['user_name' => $request->user_name, 'password' => $request->password])) {
             $user = Auth::user();
+
+//            $credentials = request(['email', 'password']);
+//
+//            $credentials['active'] = 1;
+
+            if($user->active != 1) {
+                return response()->json([
+                    "error" => "Please, Confirm Your Email Address!",
+                    'result' => null
+                ], 200);
+            }
+
+//            if(!Auth::attempt($credentials))
+//                return response()->json([
+//                    "error" => "Please, Confirm Your Email Address!",
+//                    'result' => null
+//                ], 200);
+
             $success['token'] = $user->createToken('My App')->accessToken;
             $result =
                 [

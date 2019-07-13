@@ -24,6 +24,9 @@ Route::group([
 ], function () {
     Route::post('login', 'Auth\PassportController@login');
     Route::post('register', 'Auth\PassportController@register');
+    Route::get('signup/activate/{token}', 'Auth\PassportController@signupActivate');
+    Route::post('send-confirmation-email', 'Auth\PassportController@sendConfirmation');
+    Route::post('reset-email', 'Auth\ProfileController@resetEmail');
 
     Route::group([
         'middleware' => 'auth:api'
@@ -42,8 +45,11 @@ Route::group([
     'middleware' => 'auth:api'
 ], function () {
     // Profile
-    Route::post('profile/add-friend', 'Profile\ProfileController@addFriend');
+    Route::post('profile/send-friend-request', 'Profile\ProfileController@sendFriendRequest');
+    Route::post('profile/response-friend-request', 'Profile\ProfileController@responseFriendRequest');
+//    Route::post('profile/delete-friend', 'Profile\ProfileController@deleteFriend');
     Route::get('profile/get-friends-list', 'Profile\ProfileController@getFriendsList');
+    Route::post('profile/search-user', 'Profile\ProfileController@searchUser');
     Route::post('profile/change-first-name', 'Profile\ProfileController@changeFirstName');
     Route::post('profile/change-last-name', 'Profile\ProfileController@changeLastName');
     Route::post('profile/change-password', 'Profile\ProfileController@changePassword');
@@ -56,7 +62,16 @@ Route::group([
     //Group chat 1
     Route::post("group/send-notification", 'Profile\ProfileController@sendNotification');
     Route::post("group/get-chat-occupants", 'Profile\ProfileController@getChatOccupants');
+    Route::get('group/get-dialogs', 'Profile\ProfileController@getDialogs');
 
     //Tours
-    Route::post("tour/save-tour", 'Tour\TourController@saveTour');
+    Route::post("tour/save-tour", 'Game\GameController@saveTour');
+    Route::post("tour/add-question-to-tour", 'Question\QuestionController@addQuestion');
+
+    Route::get("tour/get-all-tours", 'Game\GameController@getTournaments');
+    Route::get("tour/get-selected-tour/{tournamentId}", 'Game\GameController@getSelectedTournament');
+    Route::post("tour/save-tour-results", 'Game\GameController@saveTourResults');
+    Route::get("tour/get-tournament-results/{tournamentId}", 'Game\GameController@getTourRatings');
+
+
 });

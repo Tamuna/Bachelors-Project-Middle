@@ -6,6 +6,7 @@ namespace App\Http\Controllers\Question;
 
 use App\Answer;
 use DB;
+use function GuzzleHttp\Promise\all;
 use Illuminate\Http\Request;
 
 class QuestionController
@@ -26,7 +27,11 @@ class QuestionController
     {
         $userId = $request->user()->id;
         $alreadyAnsweredQuestions = DB::table('answered_questions')->where("user_id", $userId)->pluck('question_id');
-        $questions = DB::table('questions')->inRandomOrder()->whereNotIn('id', $alreadyAnsweredQuestions)->get()->take($numberOfQuestions);
+
+        $questions = DB::table('questions')->inRandomOrder()->
+        whereNotIn('id', $alreadyAnsweredQuestions)->
+        where('is_tour_question', false)->get()->take($numberOfQuestions);
+
         $questionIds = $questions->pluck('id');
         foreach ($questionIds as $questionId) {
             DB::table('answered_questions')->insert(
@@ -49,7 +54,7 @@ class QuestionController
         $result = false;
         $maxDif = strlen($s1) / 4;
         try {
-            if (levenshtein(substr($s1,0,255), substr($s2,0,255)) <= $maxDif) {
+            if (levenshtein(substr($s1, 0, 255), substr($s2, 0, 255)) <= $maxDif) {
                 $result = true;
             }
         } catch (Exception $e) {
@@ -72,5 +77,38 @@ class QuestionController
             }
         }
         return $data;
+    }
+
+    public function addQuestion(Request $request)
+    {
+        $question_content = $request->all()["question_content"];
+        $answers = $request->all()["answers"];
+        $tournamentId = $request->all()["tour_id"];
+        $userId = $request->all()["user_id"];
+
+        $questionId = DB::table('questions')->insertGetId([
+            'question_content' => $question_content,
+            'user_id' => $userId,
+            'is_tour_question' => true
+        ]);
+
+        foreach ($answers as $answer) {
+            DB::table('answers')->insertGetId([
+                'answer' => $answer,
+                'question_id' => $questionId
+            ]);
+        }
+
+        DB::table('tournament_questions')->insert([
+            'question_id' => $questionId,
+            'tournament_id' => $tournamentId
+        ]);
+
+        $result = [
+            'error' >= null,
+            'result' => $questionId
+        ];
+
+        return $result;
     }
 }

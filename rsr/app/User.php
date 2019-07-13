@@ -7,19 +7,12 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Laravel\Passport\HasApiTokens;
 use Notification;
-class User extends Authenticatable implements  MustVerifyEmail
+class User extends Authenticatable
 {
     use HasApiTokens, Notifiable;
 
-    /**
-     * Send the email verification notification.
-     *
-     * @return void
-     */
-    public function sendEmailVerificationNotification()
-    {
-        $this->notify(new VerifyEmail); // my notification
-    }
+
+    protected $dates = ['deleted_at'];
 
     /**
      * The attributes that are mass assignable.
@@ -27,7 +20,7 @@ class User extends Authenticatable implements  MustVerifyEmail
      * @var array
      */
     protected $fillable = [
-        'user_name', 'email', 'password', 'chat_user_id', 'device_token'
+        'user_name', 'email', 'password', 'chat_user_id', 'device_token', 'active', 'activation_token',
     ];
 
     /**
@@ -36,7 +29,7 @@ class User extends Authenticatable implements  MustVerifyEmail
      * @var array
      */
     protected $hidden = [
-        'password', 'remember_token',
+        'password', 'remember_token', 'activation_token',
     ];
 
     /**

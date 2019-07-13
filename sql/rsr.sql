@@ -1,32 +1,4 @@
-drop schema rsr;
-create schema rsr
-default character set utf8;
 
-use rsr;
--- CREATE TABLE users (
---     id INT NOT NULL AUTO_INCREMENT,
---     name VARCHAR(100) NOT NULL,
---     email VARCHAR(100) NOT NULL,
---     username VARCHAR(100) UNIQUE,
---     password VARCHAR(512) NOT NULL,
---     birth_date DATE,
---     updated_at VARCHAR(4000),
---     created_at VARCHAR(4000),
---     profile_picture BLOB,
---     remember_token VARCHAR(100),
---     PRIMARY KEY (id)
--- );
-
-
-
--- phpMyAdmin SQL Dump
--- version 4.9.0.1
--- https://www.phpmyadmin.net/
---
--- Host: 127.0.0.1
--- Generation Time: Jun 15, 2019 at 02:04 PM
--- Server version: 10.3.15-MariaDB
--- PHP Version: 7.3.6
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
